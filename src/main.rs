@@ -1,3 +1,5 @@
+mod field;
+
 use std::time::Duration;
 
 use sdl2::{event::Event, pixels::Color};
@@ -13,7 +15,7 @@ fn main() {
 
     let mut canvas = window.into_canvas().build().unwrap();
 
-    canvas.set_draw_color(Color::RGB(0x00, 0x7f, 0xff));
+    canvas.set_draw_color(Color::RGB(0xff, 0xff, 0xff));
     canvas.clear();
     canvas.present();
 
