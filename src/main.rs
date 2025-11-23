@@ -3,7 +3,7 @@ mod state;
 
 use std::time::Duration;
 
-use sdl2::{event::Event, image::LoadTexture, pixels::Color, render::TextureCreator};
+use sdl2::{event::Event, image::LoadTexture, mouse::MouseButton, pixels::Color, render::TextureCreator};
 
 use crate::{field::Field, state::SdlData};
 
@@ -45,11 +45,19 @@ fn main() {
     sdl.canvas.present();
 
     'event: loop {
+        sdl.canvas.set_draw_color(Color::RGB(31, 37, 47));
+        sdl.canvas.clear();
         field.render(&mut sdl);
+
         for e in sdl.event_pump.poll_iter() {
             match e {
                 Event::MouseButtonUp { mouse_btn, x, y, .. } => {
-                    
+                    if mouse_btn == MouseButton::Left {
+                        let (w, h) = field.size();
+                        if x <= w as i32 * 32 && y <= h as i32 * 24 {
+                            field.handle_mouse(x, y);
+                        }
+                    }
                 },
                 Event::Quit { .. } => break 'event,
                 _ => {},

@@ -37,31 +37,61 @@ impl Field {
         for y in 0..(height as usize) {
             for x in 0..(width as usize) {
                 let mut mines = 0;
-                if let Some(cell) = field.get_mut(y) {
-                    if let Some(7) = cell.get_mut(x) {
-                        continue;
+                if x % 2 == 0 {
+                    if let Some(cell) = field.get_mut(y) {
+                        if let Some(7) = cell.get_mut(x) {
+                            continue;
+                        }
+                        if x > 0 && let Some(7) = cell.get_mut(x - 1) {
+                            mines += 1;
+                        }
+                        if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
+                            mines += 1;
+                        }
                     }
-                    if x > 0 && let Some(7) = cell.get_mut(x - 1) {
-                        mines += 1;
+                    if y < height as usize && let Some(cell) = field.get_mut(y + 1) {
+                        if x > 0 && let Some(7) = cell.get_mut(x - 1) {
+                            mines += 1;
+                        }
+                        if let Some(7) = cell.get_mut(x) {
+                            mines += 1;
+                        }
+                        if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
+                            mines += 1;
+                        }
                     }
-                    if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
-                        mines += 1;
+                    if y > 0 && let Some(cell) = field.get_mut(y - 1) {
+                        if let Some(7) = cell.get_mut(x) {
+                            mines += 1;
+                        }
                     }
-                }
-                if y > 0 && let Some(cell) = field.get_mut(y - 1) {
-                    if let Some(7) = cell.get_mut(x) {
-                        mines += 1;
+                } else {
+                    if let Some(cell) = field.get_mut(y) {
+                        if let Some(7) = cell.get_mut(x) {
+                            continue;
+                        }
+                        if x > 0 && let Some(7) = cell.get_mut(x - 1) {
+                            mines += 1;
+                        }
+                        if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
+                            mines += 1;
+                        }
                     }
-                    if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
-                        mines += 1;
+                    if y > 0 && let Some(cell) = field.get_mut(y - 1) {
+                        if x > 0 && let Some(7) = cell.get_mut(x - 1) {
+                            mines += 1;
+                        }
+                        if let Some(7) = cell.get_mut(x) {
+                            mines += 1;
+                        }
+                        if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
+                            mines += 1;
+                        }
                     }
-                }
-                if y < height as usize && let Some(cell) = field.get_mut(y + 1) {
-                    if let Some(7) = cell.get_mut(x) {
-                        mines += 1;
-                    }
-                    if x < width as usize && let Some(7) = cell.get_mut(x + 1) {
-                        mines += 1;
+                    if y < height as usize && let Some(cell) = field.get_mut(y + 1) {
+                        if let Some(7) = cell.get_mut(x) {
+                            mines += 1;
+                        }
                     }
                 }
 
@@ -100,30 +130,62 @@ impl Field {
     }
 
     pub fn reveal(&mut self, x: usize, y: usize, show: bool) {
+        if self.shown[y][x] {
+            return;
+        }
+
         if self.cells[y][x] == 7 {
             if show {
-                // game over
+                let (w, h) = self.size();
+                for i in 0..h {
+                    for j in 0..w {
+                        if self.cells[i][j] == 7 {
+                            self.shown[i][j] = true;
+                        }
+                    }
+                }
             }
         } else {
             self.shown[y][x] = true;
             if self.cells[y][x] == 0 {
-                if x > 0 {
-                    self.reveal(x - 1, y, false);
-                    if y > 0 {
-                        self.reveal(x - 1, y - 1, false);
+                if x % 2 == 0 {
+                    if x > 0 {
+                        self.reveal(x - 1, y, false);
+                        if y < self.height as usize - 1 {
+                            self.reveal(x - 1, y + 1, false);
+                        }
                     }
-                }
-                if x < self.width as usize {
-                    self.reveal(x + 1, y, false);
-                    if y > 0 {
-                        self.reveal(x + 1, y - 1, false);
+                    if x < self.width as usize - 1 {
+                        self.reveal(x + 1, y, false);
+                        if y < self.height as usize - 1 {
+                            self.reveal(x + 1, y + 1, false);
+                        }
                     }
-                }
-                if y > 0 {
-                    self.reveal(x, y - 1, false);
-                }
-                if y < self.height as usize {
-                    self.reveal(x, y + 1, false);
+                    if y > 0 {
+                        self.reveal(x, y - 1, false);
+                    }
+                    if y < self.height as usize - 1 {
+                        self.reveal(x, y + 1, false);
+                    }
+                } else {
+                    if x > 0 {
+                        self.reveal(x - 1, y, false);
+                        if y > 0 {
+                            self.reveal(x - 1, y - 1, false);
+                        }
+                    }
+                    if x < self.width as usize - 1 {
+                        self.reveal(x + 1, y, false);
+                        if y > 0 {
+                            self.reveal(x + 1, y - 1, false);
+                        }
+                    }
+                    if y > 0 {
+                        self.reveal(x, y - 1, false);
+                    }
+                    if y < self.height as usize - 1 {
+                        self.reveal(x, y + 1, false);
+                    }
                 }
             }
         }
