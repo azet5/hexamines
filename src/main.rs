@@ -11,7 +11,7 @@ fn main() {
     let sdl = sdl2::init().unwrap();
     let video = sdl.video().unwrap();
 
-    let window = video.window("hexamines", 800, 600)
+    let window = video.window("hexamines", 320, 272)
         .position_centered()
         .build()
         .unwrap();
