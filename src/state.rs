@@ -20,7 +20,7 @@ impl Field {
                 if y < 16 { 0 } else { (y -  16) / 32 }
             } else { y / 32 }
         );
-        eprintln!("{x} {y}");
+        
         if x < w as i32 && y < h as i32 {
             self.reveal(x as usize, y as usize, true);
         }

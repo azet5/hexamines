@@ -11,6 +11,8 @@ fn main() {
     let sdl = sdl2::init().unwrap();
     let video = sdl.video().unwrap();
 
+    sdl2::hint::set("SDL_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR", "0");
+
     let window = video.window("hexamines", 320, 272)
         .position_centered()
         .build()
