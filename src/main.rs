@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use sdl2::{event::Event, image::LoadTexture, mouse::MouseButton, pixels::Color};
 
-use crate::{field::Field, state::SdlData};
+use crate::{field::{Field, State}, state::SdlData};
 
 fn main() {
     let sdl = sdl2::init().unwrap();
@@ -53,9 +53,11 @@ fn main() {
             match e {
                 Event::MouseButtonUp { mouse_btn, x, y, .. } => {
                     if mouse_btn == MouseButton::Left {
-                        let (w, h) = field.size();
-                        if x <= w as i32 * 32 && y <= h as i32 * 24 {
-                            field.handle_mouse(x, y);
+                        if field.state() == State::Playing {
+                            // let (w, h) = field.size();
+                            // if x <= w as i32 * 32 && y <= h as i32 * 24 {
+                                field.handle_mouse(x, y);
+                            // }
                         }
                     }
                 },

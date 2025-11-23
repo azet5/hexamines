@@ -1,6 +1,13 @@
 use std::collections::HashSet;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum State {
+    Playing,
+    Stopped,
+}
+
 pub struct Field {
+    state: State,
     cells: Vec<Vec<u8>>,
     shown: Vec<Vec<bool>>,
     width: u8,
@@ -120,6 +127,7 @@ impl Field {
         }
 
         Ok(Self {
+            state: State::Playing,
             cells: Self::generate_field(width, height, Self::place_mines(width, height, mines)),
             shown: Self::filled(false, width, height),
             width,
@@ -142,6 +150,8 @@ impl Field {
                         }
                     }
                 }
+
+                self.state = State::Stopped;
             }
         } else {
             self.shown[y][x] = true;
@@ -195,5 +205,9 @@ impl Field {
 
     pub fn get_cell(&self, x: usize, y: usize) -> (u8, bool) {
         (self.cells[y][x], self.shown[y][x])
+    }
+
+    pub fn state(&self) -> State {
+        self.state
     }
 }
