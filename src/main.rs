@@ -3,7 +3,7 @@ mod state;
 
 use std::time::Duration;
 
-use sdl2::{event::Event, image::LoadTexture, mouse::MouseButton, pixels::Color, render::TextureCreator};
+use sdl2::{event::Event, image::LoadTexture, mouse::MouseButton, pixels::Color};
 
 use crate::{field::Field, state::SdlData};
 
@@ -18,10 +18,10 @@ fn main() {
     
     let mut field = Field::new(13, 8, 16).unwrap();
     
-    let mut canvas = window.into_canvas().build().unwrap();
-    let mut event_pump = sdl.event_pump().unwrap();
-    let mut creator = canvas.texture_creator();
-    let mut textures = vec![
+    let canvas = window.into_canvas().build().unwrap();
+    let event_pump = sdl.event_pump().unwrap();
+    let creator = canvas.texture_creator();
+    let textures = vec![
         creator.load_texture("data/cell0.png").unwrap(),
         creator.load_texture("data/cell1.png").unwrap(),
         creator.load_texture("data/cell2.png").unwrap(),

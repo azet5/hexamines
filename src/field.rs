@@ -5,7 +5,6 @@ pub struct Field {
     shown: Vec<Vec<bool>>,
     width: u8,
     height: u8,
-    mines: u16,
 }
 
 impl Field {
@@ -125,7 +124,6 @@ impl Field {
             shown: Self::filled(false, width, height),
             width,
             height,
-            mines,
         })
     }
 

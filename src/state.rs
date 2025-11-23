@@ -1,13 +1,12 @@
 use std::collections::HashMap;
 
-use sdl2::{EventPump, rect::Rect, render::{Canvas, Texture, TextureCreator}, video::{Window, WindowContext}};
+use sdl2::{EventPump, rect::Rect, render::{Canvas, Texture}, video::Window};
 
 use crate::field::Field;
 
 pub struct SdlData<'a> {
     pub canvas: Canvas<Window>,
     pub event_pump: EventPump,
-    // pub creator: TextureCreator<WindowContext>,
     // pub textures: HashMap<&'a str, Texture<'a>>,
     pub textures: Vec<Texture<'a>>
 }
