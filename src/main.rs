@@ -45,7 +45,11 @@ fn main() {
     sdl.canvas.present();
 
     'event: loop {
-        sdl.canvas.set_draw_color(Color::RGB(31, 37, 47));
+        if field.state() == State::Won {
+            sdl.canvas.set_draw_color(Color::RGB(42, 157, 73));
+        } else {
+            sdl.canvas.set_draw_color(Color::RGB(31, 37, 47));
+        }
         sdl.canvas.clear();
         field.render(&mut sdl);
 

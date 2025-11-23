@@ -3,7 +3,8 @@ use std::collections::HashSet;
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum State {
     Playing,
-    Stopped,
+    Won,
+    Lost,
 }
 
 pub struct Field {
@@ -12,6 +13,8 @@ pub struct Field {
     shown: Vec<Vec<bool>>,
     width: u8,
     height: u8,
+    mines: u16,
+    left: u16,
 }
 
 impl Field {
@@ -132,6 +135,8 @@ impl Field {
             shown: Self::filled(false, width, height),
             width,
             height,
+            mines,
+            left: width as u16 * height as u16,
         })
     }
 
@@ -151,10 +156,17 @@ impl Field {
                     }
                 }
 
-                self.state = State::Stopped;
+                self.state = State::Lost;
             }
         } else {
             self.shown[y][x] = true;
+            self.left -= 1;
+
+            if self.left == self.mines {
+                self.state = State::Won;
+                return;
+            }
+
             if self.cells[y][x] == 0 {
                 if x % 2 == 0 {
                     if x > 0 {
