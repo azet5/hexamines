@@ -1,8 +1,11 @@
 mod field;
+mod state;
 
 use std::time::Duration;
 
-use sdl2::{event::Event, pixels::Color};
+use sdl2::{event::Event, image::LoadTexture, pixels::Color, render::TextureCreator};
+
+use crate::{field::Field, state::SdlData};
 
 fn main() {
     let sdl = sdl2::init().unwrap();
@@ -12,23 +15,48 @@ fn main() {
         .position_centered()
         .build()
         .unwrap();
-
+    
+    let mut field = Field::new(13, 8, 16).unwrap();
+    
     let mut canvas = window.into_canvas().build().unwrap();
-
-    canvas.set_draw_color(Color::RGB(0xff, 0xff, 0xff));
-    canvas.clear();
-    canvas.present();
-
     let mut event_pump = sdl.event_pump().unwrap();
+    let mut creator = canvas.texture_creator();
+    let mut textures = vec![
+        creator.load_texture("data/cell0.png").unwrap(),
+        creator.load_texture("data/cell1.png").unwrap(),
+        creator.load_texture("data/cell2.png").unwrap(),
+        creator.load_texture("data/cell3.png").unwrap(),
+        creator.load_texture("data/cell4.png").unwrap(),
+        creator.load_texture("data/cell5.png").unwrap(),
+        creator.load_texture("data/cell6.png").unwrap(),
+        creator.load_texture("data/cell7.png").unwrap(),
+        creator.load_texture("data/cell8.png").unwrap(),
+        // creator.load_texture("data/cell9.png").unwrap(),
+        creator.load_texture("data/cell.png").unwrap(),
+    ];
+    let mut sdl = SdlData {
+        canvas,
+        event_pump,
+        textures,
+    };
+
+    sdl.canvas.set_draw_color(Color::RGB(31, 37, 47));
+    sdl.canvas.clear();
+    sdl.canvas.present();
+
     'event: loop {
-        for e in event_pump.poll_iter() {
+        field.render(&mut sdl);
+        for e in sdl.event_pump.poll_iter() {
             match e {
+                Event::MouseButtonUp { mouse_btn, x, y, .. } => {
+                    
+                },
                 Event::Quit { .. } => break 'event,
                 _ => {},
             }
         }
 
-        canvas.present();
+        sdl.canvas.present();
         std::thread::sleep(Duration::new(0, 1000000000 / 60));
     }
 }

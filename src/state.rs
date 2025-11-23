@@ -1,0 +1,42 @@
+use std::collections::HashMap;
+
+use sdl2::{EventPump, rect::Rect, render::{Canvas, Texture, TextureCreator}, video::{Window, WindowContext}};
+
+use crate::field::Field;
+
+pub struct SdlData<'a> {
+    pub canvas: Canvas<Window>,
+    pub event_pump: EventPump,
+    // pub creator: TextureCreator<WindowContext>,
+    // pub textures: HashMap<&'a str, Texture<'a>>,
+    pub textures: Vec<Texture<'a>>
+}
+
+impl Field {
+    pub fn state(&mut self) {
+        
+    }
+
+    pub fn render(&self, sdl: &mut SdlData) {
+        let (w, h) = self.size();
+        for y in 0..h {
+            for x in 0..w {
+                let cell = self.get_cell(x, y);
+                let dy = if x % 2 == 0 { 16 } else { 0 };
+                if !cell.1 {
+                    sdl.canvas.copy(
+                        &sdl.textures[cell.0 as usize],
+                        None,
+                        Some(Rect::new(x as i32 * 24, y as i32 * 32 + dy, 32, 32))
+                    ).unwrap();
+                } else {
+                    sdl.canvas.copy(
+                        &sdl.textures[9],
+                        None,
+                        Some(Rect::new(x as i32 * 24, y as i32 * 30 + dy, 32, 32))
+                    ).unwrap();
+                }
+            }
+        }
+    }
+}
